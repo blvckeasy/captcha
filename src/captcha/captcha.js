@@ -5,7 +5,30 @@ const { generateProblem, generateRandomNumber } = require('../helpers/utils')
 const JWT = require("../helpers/jwt");
 
 class Database {
-  constructor () {}
+  constructor (dbPath) {
+    this.dbPath = dbPath;
+  }
+  
+  async #readFile () {
+    const data = Fs.readFileSync(this.dbPath, {
+      'encoding': "utf-8"
+    })
+    return JSON.stringify(data || "[]");
+  }
+
+  async #appendFile(data) {
+    const fileData = this.#readFile()
+    fileData.append(data);
+    Fs.writeFileSync(this.dbPath, fileData);
+    return data;
+  }
+
+  find (id) {
+    const data = [] || this.#readFile();
+    return data.find((obj) => {
+      return obj.id = id;
+    })
+  }
 }
 
 class Captcha {
