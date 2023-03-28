@@ -2,7 +2,11 @@ const Fs = require('fs')
 const Path = require("path")
 const { createCanvas } = require('canvas')
 const { generateProblem, generateRandomNumber } = require('../helpers/utils')
+const JWT = require("../helpers/jwt");
 
+class Database {
+  constructor () {}
+}
 
 class Captcha {
   constructor (opts = {}) {
@@ -60,8 +64,15 @@ class Captcha {
       var data = this.canvas.toDataURL()
     }
 
-    return data
+    return {
+      data, 
+      token: JWT.sign({
+        data,
+      }),
+    }
   }
+
+  async check(token) {}
 }
 
 

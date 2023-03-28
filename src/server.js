@@ -31,9 +31,7 @@ app.get("/createQuiz", async (req, res) => {
   const opts = { width: 200, height: 50 }
   const captcha = new Captcha(opts);
   const quiz = await captcha.create({ buffer: Boolean(isBuffer) });
-  return res.send({
-    data: quiz
-  });
+  return res.send(quiz);
 })
 
 app.listen(PORT, () => {
