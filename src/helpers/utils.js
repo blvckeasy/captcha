@@ -13,13 +13,6 @@ function generateRandomNumber (min, max) {
 }
 
 
-function random(obj = {}) {
-  const { max, min } = obj;
-
-  Math.floor(Math.random() * (max + 1)) + min;
-}
-
-
 module.exports = {
   generateProblem,
   generateRandomNumber
