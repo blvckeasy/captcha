@@ -4,6 +4,7 @@ const exphbs = require("express-handlebars");
 const cors = require("cors");
 const mime = require("mime");
 const path = require("path");
+const Captcha = require("./captcha/captcha");
 
 
 const app = Express();
@@ -25,8 +26,14 @@ app.get("/", (req, res) => {
   return res.render('quiz', data)
 })
 
-app.get("/createQuiz", (req, res) => {
-  
+app.get("/createQuiz", async (req, res) => {
+  const { isBuffer } = req.query;
+  const opts = { width: 200, height: 50 }
+  const captcha = new Captcha(opts);
+  const quiz = await captcha.create({ buffer: Boolean(isBuffer) });
+  return res.send({
+    data: quiz
+  });
 })
 
 app.listen(PORT, () => {

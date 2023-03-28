@@ -5,12 +5,9 @@ const { generateProblem, generateRandomNumber } = require('../helpers/utils')
 
 
 class Captcha {
-  constructor (width, height) {
-
-    this.width = width;
-    this.height = height
-    this.canvas = createCanvas(this.width, this.height)
-    this.ctx = this.canvas.getContext('2d')
+  constructor (opts = {}) {
+    this.width = opts?.width;
+    this.height = opts?.height
   }
 
   async __docs__ () {
@@ -38,13 +35,17 @@ class Captcha {
     this.canvas = createCanvas(this.width, this.height)
     this.ctx = this.canvas.getContext('2d')
 
+    this.ctx.fillStyle = this.opts?.bgColor || 'white';
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+    this.fillPeaper();
+    this.ctx.fillStyle = "black";
+    
     const randomQuiz = generateProblem();
 
     let _x = 10;
     let _y = 10;
-  
-    this.fillPeaper();
-  
+
     for (let chunk of randomQuiz) {
       let fontSize = generateRandomNumber(Math.floor(this.height / 1.4 - 7), Math.floor(this.height / 1.4));
       this.ctx.font = `${fontSize}px Impact`
