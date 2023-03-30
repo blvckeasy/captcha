@@ -1,9 +1,9 @@
 const Fs = require('fs')
 const Path = require("path")
-const { createCanvas } = require('canvas')
-const { AttributeRequireError } = require("../helpers/errors")
-const { generateProblem, generateRandomNumber } = require('../helpers/utils')
 const JWT = require("../helpers/jwt");
+const { createCanvas } = require('canvas')
+const { AttributeRequireError, TokenExpiredError, InvalidTokenError } = require("../helpers/errors")
+const { generateProblem, generateRandomNumber } = require('../helpers/utils')
 const { generateUUID } = require("../helpers/utils")
 
 class Database {
@@ -27,22 +27,20 @@ class Database {
   }
 
   async find (id) {
-    const data = await this.#readFile() || [];
-    return data.find((obj) => {
-      return obj.id = id;
+    const data = await this.#readFile();
+    return data.find((ob) => {
+      return ob.id == id;
     })
   }
 }
 
 class Captcha extends Database {
-  constructor (opts = {}) {
+  constructor 
     super(Path.join(__dirname, 'database.json'));
-    this.width = opts?.width;
-    this.height = opts?.height;
   }
 
   async __docs__ () {
-    return Fs.readFileSync(Path.join(__dirname, "README.md"), "utf-8")
+    return Fs.readFileSync(Path.join(__dirname, "README.md"), "UTF-8")
   }
 
   async fillPeaper (count = this.height) {
@@ -66,8 +64,11 @@ class Captcha extends Database {
     }
   }
   
-  async create(opts = { buffer: true }, userAgent) {
-    if (!userAgent) throw new AttributeRequireError("userAgent is must be require!");
+  async create(opts = { buffer: true, width, height }, userAgent) {
+    if (!userAgent) throw new AttributeRequireError(400 ,"userAgent is must be require!");
+
+    this.width = opts?.width;
+    this.height = opts?.height;
 
     this.canvas = createCanvas(this.width, this.height)
     this.ctx = this.canvas.getContext('2d')
@@ -107,8 +108,22 @@ class Captcha extends Database {
     }
   }
 
-  async check(token) {
+  async check(token, answer, userAgent) {
+    try {
+      if (!userAgent) throw new AttributeRequireError(400, "userAgent is must be required!"); 
 
+      const { id, userAgent: tokenUserAgent } = JWT.verify(token);
+      if (userAgent !== tokenUserAgent) throw new InvalidTokenError(400, "Token is invalid!");
+      
+      const quiz = await this.find(id)
+      if (!quiz) throw new QuizNotFoundError(400, "Captcha not found in database please try restarting.")
+      
+      if (quiz.quizAnswer != answer) return { correct: false }
+
+      return { correct: true }
+    } catch (error) {
+      throw new TokenExpiredError(400, "token has expired");
+    }
   }
 }
 
