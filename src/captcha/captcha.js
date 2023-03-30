@@ -78,11 +78,11 @@ class Captcha extends Database {
     this.fillPeaper();
     this.ctx.fillStyle = "black";
     
-    const randomQuiz = generateProblem();
+    const { quiz, answer } = generateProblem();
 
     let [_x, _y] = [10, 10];
 
-    for (let chunk of randomQuiz) {
+    for (let chunk of quiz) {
       let fontSize = generateRandomNumber(Math.floor(this.height / 1.4 - 7), Math.floor(this.height / 1.4));
       this.ctx.font = `${fontSize}px Impact`
       let width = this.ctx.measureText(chunk).width
@@ -97,7 +97,7 @@ class Captcha extends Database {
     }
 
     const id = generateUUID();
-    this.writeToDatabase({ id, userAgent });
+    this.writeToDatabase({ id, userAgent, quizAnswer: answer });
 
     return {
       data, 
@@ -108,7 +108,7 @@ class Captcha extends Database {
   }
 
   async check(token) {
-    
+
   }
 }
 

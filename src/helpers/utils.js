@@ -7,7 +7,10 @@ function generateProblem () {
   let second_number = Math.floor(Math.random() * 11 + 1)
   let operator = items[Math.floor(Math.random()*items.length)]
 
-  return `${first_number} ${operator} ${second_number} = ?`
+  return {
+    quiz: `${first_number} ${operator} ${second_number} = ?`,
+    answer: eval(`${first_number}${operator}${second_number}`)
+  }
 }
 
 function generateRandomNumber (min, max) {
