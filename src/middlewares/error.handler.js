@@ -1,3 +1,6 @@
+const Errors = require("../helpers/errors");
+
+
 async function errorHandler (err, req, res, next) {
 
   if (Object.keys(Errors).some(function (errorName) {
@@ -17,5 +20,6 @@ async function errorHandler (err, req, res, next) {
     status: 500,
   })
 }
+
 
 module.exports = errorHandler

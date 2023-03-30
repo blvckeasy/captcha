@@ -118,9 +118,9 @@ class Captcha extends Database {
       const quiz = await this.find(id)
       if (!quiz) throw new QuizNotFoundError(400, "Captcha not found in database please try restarting.")
       
-      if (quiz.quizAnswer != answer) return { correct: false }
+      if (quiz.quizAnswer != answer) return { correct: false, message: "Couldn't find it, please try again." }
 
-      return { correct: true }
+      return { correct: true, message: "You have passed successfully." }
     } catch (error) {
       throw new TokenExpiredError(400, "token has expired");
     }

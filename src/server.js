@@ -3,8 +3,6 @@ const methodOverride = require("method-override");
 const exphbs = require("express-handlebars");
 const cors = require("cors");
 const path = require("path");
-const Captcha = require("./captcha/captcha");
-const Errors = require("./helpers/errors");
 const QuizRouter = require("./routes/quiz");
 const errorHandler = require("./middlewares/error.handler")
 
