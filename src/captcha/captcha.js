@@ -35,7 +35,7 @@ class Database {
 }
 
 class Captcha extends Database {
-  constructor 
+  constructor () {
     super(Path.join(__dirname, 'database.json'));
   }
 
