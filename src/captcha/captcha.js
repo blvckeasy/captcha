@@ -1,8 +1,10 @@
 const Fs = require('fs')
 const Path = require("path")
 const { createCanvas } = require('canvas')
+const { AttributeRequireError } = require("../helpers/errors")
 const { generateProblem, generateRandomNumber } = require('../helpers/utils')
 const JWT = require("../helpers/jwt");
+const { generateUUID } = require("../helpers/utils")
 
 class Database {
   constructor (dbPath) {
@@ -10,31 +12,33 @@ class Database {
   }
   
   async #readFile () {
-    const data = Fs.readFileSync(this.dbPath, {
-      'encoding': "utf-8"
-    })
-    return JSON.stringify(data || "[]");
+    const jsonData = Fs.readFileSync(this.dbPath)
+    return JSON.parse(jsonData) || []
   }
 
-  async #appendFile(data) {
-    const fileData = this.#readFile()
-    fileData.append(data);
-    Fs.writeFileSync(this.dbPath, fileData);
-    return data;
+  async #writeFile (data) {
+    Fs.writeFileSync(this.dbPath, JSON.stringify(data, null, 4))
   }
 
-  find (id) {
-    const data = [] || this.#readFile();
+  async writeToDatabase(data) {
+    const fileData = await this.#readFile()
+    fileData.push(data);
+    this.#writeFile(fileData);
+  }
+
+  async find (id) {
+    const data = await this.#readFile() || [];
     return data.find((obj) => {
       return obj.id = id;
     })
   }
 }
 
-class Captcha {
+class Captcha extends Database {
   constructor (opts = {}) {
+    super(Path.join(__dirname, 'database.json'));
     this.width = opts?.width;
-    this.height = opts?.height
+    this.height = opts?.height;
   }
 
   async __docs__ () {
@@ -48,20 +52,26 @@ class Captcha {
       
       this.ctx.strokeStyle = `rgb(${generateRandomNumber(0, 256)},${generateRandomNumber(0, 256)},${generateRandomNumber(0, 1)})`
       this.ctx.beginPath()
+
       this.ctx.lineTo(x, y)
       this.ctx.lineTo(x + 5, y + 5)
+      
       this.ctx.lineTo(x + 5, y + 5)
       this.ctx.lineTo(x + 15, y)
+      
       this.ctx.lineTo(x + 15, y)
       this.ctx.lineTo(x + 20, y + 5)
+      
       this.ctx.stroke()
     }
   }
   
-  async create(opts = { buffer: true }) {
+  async create(opts = { buffer: true }, userAgent) {
+    if (!userAgent) throw new AttributeRequireError("userAgent is must be require!");
+
     this.canvas = createCanvas(this.width, this.height)
     this.ctx = this.canvas.getContext('2d')
-
+    
     this.ctx.fillStyle = this.opts?.bgColor || 'white';
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -70,8 +80,7 @@ class Captcha {
     
     const randomQuiz = generateProblem();
 
-    let _x = 10;
-    let _y = 10;
+    let [_x, _y] = [10, 10];
 
     for (let chunk of randomQuiz) {
       let fontSize = generateRandomNumber(Math.floor(this.height / 1.4 - 7), Math.floor(this.height / 1.4));
@@ -87,15 +96,20 @@ class Captcha {
       var data = this.canvas.toDataURL()
     }
 
+    const id = generateUUID();
+    this.writeToDatabase({ id, userAgent });
+
     return {
       data, 
       token: JWT.sign({
-        data,
+        id, userAgent
       }),
     }
   }
 
-  async check(token) {}
+  async check(token) {
+    
+  }
 }
 
 

@@ -29,8 +29,9 @@ app.get("/", (req, res) => {
 app.get("/createQuiz", async (req, res) => {
   const { isBuffer } = req.query;
   const opts = { width: 200, height: 50 }
+  const userAgent = req.headers["user-agent"];
   const captcha = new Captcha(opts);
-  const quiz = await captcha.create({ buffer: Boolean(isBuffer) });
+  const quiz = await captcha.create({ buffer: Boolean(isBuffer) }, userAgent);
   return res.send(quiz);
 })
 
