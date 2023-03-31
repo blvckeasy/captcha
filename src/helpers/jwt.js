@@ -1,4 +1,5 @@
 const Jwt = require("jsonwebtoken");
+const { TokenExpiredError } = require("./errors")
 
 class JWT {
   static secretKey = "my secret key";
@@ -15,8 +16,12 @@ class JWT {
   }
 
   static verify (token) {
-    const data = Jwt.verify(token, this.secretKey);
-    return data;
+    try {
+      const data = Jwt.verify(token, this.secretKey);
+      return data;
+    } catch (error) {
+      throw new TokenExpiredError(400, "Token is expired!")
+    }
   }
 }
 

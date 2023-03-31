@@ -2,7 +2,7 @@ const Fs = require('fs')
 const Path = require("path")
 const JWT = require("../helpers/jwt");
 const { createCanvas } = require('canvas')
-const { AttributeRequireError, TokenExpiredError, InvalidTokenError } = require("../helpers/errors")
+const { AttributeRequireError, TokenExpiredError, InvalidTokenError, QuizNotFoundError } = require("../helpers/errors")
 const { generateProblem, generateRandomNumber } = require('../helpers/utils')
 const { generateUUID } = require("../helpers/utils")
 
@@ -17,7 +17,7 @@ class Database {
   }
 
   async #writeFile (data) {
-    Fs.writeFileSync(this.dbPath, JSON.stringify(data, null, 4))
+    Fs.writeFileSync(this.dbPath, JSON.stringify(data, null, 2))
   }
 
   async writeToDatabase(data) {
@@ -28,9 +28,14 @@ class Database {
 
   async find (id) {
     const data = await this.#readFile();
-    return data.find((ob) => {
-      return ob.id == id;
+    const foundQuiz = await data.find((ob) => {
+      return ob.id == id && ob.attemps < 3;
     })
+    if (foundQuiz) {
+      foundQuiz.attemps += 1;
+      this.#writeFile(data);
+    }
+    return foundQuiz
   }
 }
 
@@ -98,7 +103,7 @@ class Captcha extends Database {
     }
 
     const id = generateUUID();
-    this.writeToDatabase({ id, userAgent, quizAnswer: answer });
+    this.writeToDatabase({ id, userAgent, quizAnswer: answer, attemps: 0 });
 
     return {
       data, 
@@ -109,21 +114,17 @@ class Captcha extends Database {
   }
 
   async check(token, answer, userAgent) {
-    try {
-      if (!userAgent) throw new AttributeRequireError(400, "userAgent is must be required!"); 
+    if (!userAgent) throw new AttributeRequireError(400, "userAgent is must be required!"); 
 
-      const { id, userAgent: tokenUserAgent } = JWT.verify(token);
-      if (userAgent !== tokenUserAgent) throw new InvalidTokenError(400, "Token is invalid!");
+    const { id, userAgent: tokenUserAgent } = JWT.verify(token);
+    if (userAgent !== tokenUserAgent) throw new InvalidTokenError(400, "Token is invalid!");
       
-      const quiz = await this.find(id)
-      if (!quiz) throw new QuizNotFoundError(400, "Captcha not found in database please try restarting.")
+    const quiz = await this.find(id)
+    if (!quiz) throw new QuizNotFoundError(400, "Captcha not found in database please try restarting.")
       
-      if (quiz.quizAnswer != answer) return { correct: false, message: "Couldn't find it, please try again." }
+    if (quiz.quizAnswer != answer) return { correct: false, message: "Couldn't find it, please try again." }
 
-      return { correct: true, message: "You have passed successfully." }
-    } catch (error) {
-      throw new TokenExpiredError(400, "token has expired");
-    }
+    return { correct: true, message: "You have passed successfully." }
   }
 }
 

@@ -5,7 +5,7 @@ async function main() {
   const img = document.createElement("img");
   const checkBtn = document.getElementsByClassName("checkBtn")[0];
 
-  let response = await fetch("http://localhost:1003/createQuiz")
+  let response = await fetch(backendUrl + "/createQuiz")
   const { data: src, token } = await response.json();
 
   img.setAttribute('src', src);
@@ -29,13 +29,18 @@ async function main() {
         answer: answerInput.value
       })
     })
-    let result = await response.json()
+    let result = await response.json();
+    console.log(result);
 
-    if (!result.correct) {
+    if (!result.correct && typeof result.correct !== "undefined") {
       errorParagraph.textContent = result.message;
-    } else {
+    } else if (result.correct) {
+      console.log("ok");
       errorParagraph.textContent = null;
       alert(result.message)
+    } else if (!result.ok) {
+      alert(`${result.error.name}: ${result.error.message}`);
+      return window.location = "/";
     }
 
     answerInput.value = ""
