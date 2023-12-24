@@ -95,7 +95,7 @@ class Captcha extends Database {
 		
 		for await (let chunk of quiz) {
 			let fontSize = await generateRandomNumber(Math.floor(this.height / 1.4 - 7), Math.floor(this.height / 1.4));
-			this.ctx.font = `${fontSize}px "Impact"`
+			this.ctx.font = `${fontSize}px "Arial"`
 			let width = this.ctx.measureText(chunk).width
 			_x += width;
 			this.ctx.fillText(chunk + "", _x, _y + fontSize);
