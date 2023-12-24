@@ -92,7 +92,7 @@ class Captcha extends Database {
 		let [_x, _y] = [10, 10];
 	 
 		for (let chunk of quiz) {
-			let fontSize = generateRandomNumber(Math.floor(this.height / 1.4 - 7), Math.floor(this.height / 1.4));
+			let fontSize = await generateRandomNumber(Math.floor(this.height / 1.4 - 7), Math.floor(this.height / 1.4));
 			this.ctx.font = `${fontSize}px Impact`
 			let width = this.ctx.measureText(chunk).width
 			_x += width;
@@ -110,7 +110,7 @@ class Captcha extends Database {
 			data = this.canvas.toDataURL()
 		}
 
-		const id = generateUUID();
+		const id = await generateUUID();
 		await this.writeToDatabase({ id, userAgent, quizAnswer: answer, attemps: 0 });
 
 		return {
