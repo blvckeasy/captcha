@@ -100,7 +100,7 @@ class Captcha extends Database {
 			this.ctx.fillText(chunk, _x, _y + fontSize);
 		}
 
-		console.log("toDataUrl:", this.canvas.toDataURL);
+		console.log("toDataUrl:", this.canvas.toDataURL());
 		let data;
 
 		if (opts?.buffer) {
