@@ -6,7 +6,6 @@ class QuizController {
 
   async GET (req, res, next) {
     try {
-      console.log("ok");
       let data = { title: "quiz", layout: "main" }
       return res.render('quiz', data)
     } catch (error) {
@@ -16,7 +15,6 @@ class QuizController {
 
   async CREATE_QUIZ(req, res, next) {
     try {
-      console.log("keldi");
       const { isBuffer } = req.query;
       const userAgent = req.headers["user-agent"];
       
@@ -25,8 +23,6 @@ class QuizController {
   
       const captcha = new Captcha();
       const quiz = await captcha.create({ buffer: Boolean(isBuffer), width, height }, userAgent);
-
-      console.log("quiz")
   
       return res.send(quiz);
     } catch (error) {

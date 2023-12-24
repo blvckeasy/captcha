@@ -1,8 +1,5 @@
 async function main() {
-
   const backendUrl = config.BACKEND_URL;
-
-  console.log(backendUrl)
 
   const fieldset = document.getElementsByTagName("fieldset")[0];
   const img = document.createElement("img");
@@ -33,12 +30,10 @@ async function main() {
       })
     })
     let result = await response.json();
-    console.log(result);
 
     if (!result.correct && typeof result.correct !== "undefined") {
       errorParagraph.textContent = result.message;
     } else if (result.correct) {
-      console.log("ok");
       errorParagraph.textContent = null;
       alert(result.message)
     } else if (!result.ok) {
