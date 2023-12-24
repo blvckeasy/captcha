@@ -1,5 +1,8 @@
 async function main() {
-  const backendUrl = "http://localhost:1003";
+
+  const backendUrl = config.BACKEND_URL;
+
+  console.log(backendUrl)
 
   const fieldset = document.getElementsByTagName("fieldset")[0];
   const img = document.createElement("img");

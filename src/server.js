@@ -11,6 +11,7 @@ const PORT = process.env.PORT || 1003;
 
 app.use(Express.urlencoded({ extended: false }));
 app.use(Express.static(path.join(__dirname, 'public')));
+app.use(Express.static(path.join(process.cwd(), 'config')));
 app.use(cors({ origin: "*" }));
 app.use(methodOverride("_method"));
 app.use(Express.json());
