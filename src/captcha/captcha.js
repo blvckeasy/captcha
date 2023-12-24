@@ -84,20 +84,18 @@ class Captcha extends Database {
 		this.fillPeaper();
 		this.ctx.fillStyle = "black";
 		
-		const { quiz, answer } = generateProblem();
+		const { quiz, answer } = await generateProblem();
 
-		this.ctx.fillText("Its working", 10, 10);
-
-		// let [_x, _y] = [10, 10];
+		let [_x, _y] = [10, 10];
 	 
-		// for (let chunk of quiz) {
-		// 	let fontSize = await generateRandomNumber(Math.floor(this.height / 1.4 - 7), Math.floor(this.height / 1.4));
-		// 	this.ctx.font = `${fontSize}px Impact`
-		// 	let width = this.ctx.measureText(chunk).width
-		// 	_x += width;
+		for await (let chunk of quiz) {
+			let fontSize = await generateRandomNumber(Math.floor(this.height / 1.4 - 7), Math.floor(this.height / 1.4));
+			this.ctx.font = `${fontSize}px Impact`
+			let width = this.ctx.measureText(chunk).width
+			_x += width;
 
-		// 	this.ctx.fillText(chunk, _x, _y + fontSize);
-		// }
+			this.ctx.fillText(chunk + "", _x, _y + fontSize);
+		}
 
 		let data;
 
