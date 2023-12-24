@@ -94,7 +94,7 @@ class Captcha extends Database {
 			let width = this.ctx.measureText(chunk).width
 			_x += width;
 
-			this.ctx.strokeText(chunk, _x, _y + fontSize);
+			this.ctx.fillText(chunk, _x, _y + fontSize);
 		}
 
 		let data;
