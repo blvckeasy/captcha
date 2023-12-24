@@ -1,5 +1,5 @@
 window.config = {
-    BACKEND_URL: "https://captcha-42-05431b11bbec.herokuapp.com"
+    BACKEND_URL: "https://captcha-42-6c59502f2771.herokuapp.com"
 }
 
 // window.config = {
