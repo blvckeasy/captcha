@@ -86,16 +86,20 @@ class Captcha extends Database {
 		
 		const { quiz, answer } = await generateProblem();
 
+		
 		let [_x, _y] = [10, 10];
-	 
-		for await (let chunk of quiz) {
-			let fontSize = await generateRandomNumber(Math.floor(this.height / 1.4 - 7), Math.floor(this.height / 1.4));
-			this.ctx.font = `${fontSize}px Impact`
-			let width = this.ctx.measureText(chunk).width
-			_x += width;
-
-			this.ctx.fillText(chunk + "", _x, _y + fontSize);
-		}
+		
+		let fontSize = await generateRandomNumber(Math.floor(this.height / 1.4 - 7), Math.floor(this.height / 1.4));
+		this.ctx.font = `${fontSize}px Impact`
+		this.ctx.fillText(quiz, _x, this.canvas.height / 2 + 10);
+		
+		// for await (let chunk of quiz) {
+			// 	let fontSize = await generateRandomNumber(Math.floor(this.height / 1.4 - 7), Math.floor(this.height / 1.4));
+			// 	this.ctx.font = `${fontSize}px Impact`
+			// 	let width = this.ctx.measureText(chunk).width
+			// 	_x += width;
+			// 	this.ctx.fillText(chunk + "", _x, _y + fontSize);
+		// }
 
 		let data;
 
