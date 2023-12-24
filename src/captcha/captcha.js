@@ -69,7 +69,7 @@ class Captcha extends Database {
 		}
 	}
 	
-	async create(opts = { buffer: true, width, height }, userAgent) {
+	async create(opts = { buffer, width, height }, userAgent) {
 		if (!userAgent) throw new AttributeRequireError(400 ,"userAgent is must be require!");
 
 		this.width = opts?.width;
@@ -96,17 +96,21 @@ class Captcha extends Database {
 			this.ctx.font = `${fontSize}px Impact`
 			let width = this.ctx.measureText(chunk).width
 			_x += width;
+
 			this.ctx.fillText(chunk, _x, _y + fontSize);
 		}
-		
+
+		console.log("toDataUrl:", this.canvas.toDataURL);
+		let data;
+
 		if (opts?.buffer) {
-			var data = this.canvas.toBuffer()
+			data = this.canvas.toBuffer()
 		} else {
-			var data = this.canvas.toDataURL()
+			data = this.canvas.toDataURL()
 		}
 
 		const id = generateUUID();
-		this.writeToDatabase({ id, userAgent, quizAnswer: answer, attemps: 0 });
+		await this.writeToDatabase({ id, userAgent, quizAnswer: answer, attemps: 0 });
 
 		return {
 			data, 
