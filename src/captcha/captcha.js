@@ -86,9 +86,6 @@ class Captcha extends Database {
 		
 		const { quiz, answer } = generateProblem();
 
-		console.log("quiz:", quiz);
-		console.log("answer:", answer);
-
 		let [_x, _y] = [10, 10];
 	 
 		for (let chunk of quiz) {
@@ -97,9 +94,7 @@ class Captcha extends Database {
 			let width = this.ctx.measureText(chunk).width
 			_x += width;
 
-			console.log("chunk:", chunk)			
-
-			this.ctx.fillText(toString(chunk), _x, _y + fontSize);
+			this.ctx.strokeText(chunk, _x, _y + fontSize);
 		}
 
 		let data;
