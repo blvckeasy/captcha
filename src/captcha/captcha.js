@@ -97,10 +97,11 @@ class Captcha extends Database {
 			let width = this.ctx.measureText(chunk).width
 			_x += width;
 
-			this.ctx.fillText(chunk, _x, _y + fontSize);
+			console.log("chunk:", chunk)			
+
+			this.ctx.fillText(toString(chunk), _x, _y + fontSize);
 		}
 
-		console.log("toDataUrl:", this.canvas.toDataURL());
 		let data;
 
 		if (opts?.buffer) {
