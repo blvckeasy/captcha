@@ -2,3 +2,4 @@
 *-lock.json
 yarn.lock
 .space
+*.pem

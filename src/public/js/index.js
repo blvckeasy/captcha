@@ -2,7 +2,7 @@ async function main() {
 	const backendUrl = config.BACKEND_URL;
 
 	const fieldset = document.getElementsByTagName("fieldset")[0];
-	const img = document.createElement("img");
+	const img = document.querySelector(".captcha-image");
 	const checkBtn = document.getElementsByClassName("checkBtn")[0];
 
 	let response = await fetch(backendUrl + "/createQuiz")
