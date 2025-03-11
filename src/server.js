@@ -7,7 +7,7 @@ const QuizRouter = require("./routes/quiz");
 const errorHandler = require("./middlewares/error.handler")
 
 const app = Express();
-const PORT = process.env.PORT || 1003;
+const PORT = process.env.PORT || 3333;
 
 app.use(Express.urlencoded({ extended: false }));
 app.use(Express.static(path.join(__dirname, 'public')));
