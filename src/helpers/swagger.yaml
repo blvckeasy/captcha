@@ -1,0 +1,120 @@
+components:
+  schemas:
+    CreateQuizResponse:
+      type: object
+      required:
+        - data
+        - token
+      properties:
+        data:
+          type: string
+          format: buffer
+          example: "data:image/png;base64,iVBORw0KGgoAAAANS..."
+          description: "rasm beriladi, html'da img tag'ni src attributiga qo'yib ishlatiladi."
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiI..."
+          description: "JWT token beriladi."
+
+    CheckQuizBody:
+      type: object
+      required:
+        - token
+        - answer
+      properties:
+        token: 
+          type: string
+          description: "Sizning access tokeningiz"
+        answer:
+          type: number
+          description: "Captcha rasmning javobi."
+
+    QuizResultResponse:
+      type: object
+      properties:
+        correct:
+          type: boolean
+        message:
+          type: string
+
+    Error:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          default: false
+        error:
+          oneOf:
+            - type: object
+              properties:
+                message:
+                  type: string
+                code:
+                  type: integer
+            - type: string
+          example:
+            message: "Nimadur hato bo'ldi!"
+        errorName:
+          type: string
+        status:
+          type: number
+
+    AttributeRequireError:
+      allOf:
+        - $ref: '#/components/schemas/Error'
+        - type: object
+          properties:
+            errorName:
+              type: string
+              example: "AttributeRequireError"
+            status:
+              type: number
+              example: -10000
+
+    TokenExpiredError:
+      allOf:
+        - $ref: '#/components/schemas/Error'
+        - type: object
+          properties:
+            errorName:
+              type: string
+              example: "TokenExpiredError"
+            status:
+              type: number
+              example: -20000
+
+    InvalidTokenError:
+      allOf:
+        - $ref: '#/components/schemas/Error'
+        - type: object
+          properties:
+            errorName:
+              type: string
+              example: "InvalidTokenError"
+            status:
+              type: number
+              example: -20001
+
+    QuizNotFoundError:
+      allOf:
+        - $ref: '#/components/schemas/Error'
+        - type: object
+          properties:
+            errorName:
+              type: string
+              example: "QuizNotFoundError"
+            status:
+              type: number
+              example: -30000
+
+    InternalServerError:
+      allOf:
+        - $ref: '#/components/schemas/Error'
+        - type: object
+          properties:
+            errorName:
+              type: string
+              example: "InternalServerError"
+            status:
+              type: number
+              example: 500

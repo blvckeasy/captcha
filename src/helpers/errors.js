@@ -1,36 +1,36 @@
 class AttributeRequireError extends Error {
-  constructor(status, message) {
+  constructor(message) {
     super()
     this.name = 'AttributeRequireError'
     this.message = message
-    this.status = status
+    this.status = -10000
   }
 }
 
 class TokenExpiredError extends Error {
-  constructor(status, message) {
+  constructor(message) {
     super()
     this.name = 'TokenExpiredError'
     this.message = message
-    this.status = status
+    this.status = -20000
   }
 }
 
 class InvalidTokenError extends Error {
-  constructor(status, message) {
+  constructor(message) {
     super()
     this.name = 'InvalidTokenError'
     this.message = message
-    this.status = status
+    this.status = -20001
   }
 } 
 
 class QuizNotFoundError extends Error {
-  constructor(status, message) {
+  constructor(message) {
     super()
     this.name = 'QuizNotFoundError'
     this.message = message
-    this.status = status
+    this.status = -30000
   }
 }
 

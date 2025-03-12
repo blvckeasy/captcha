@@ -5,3 +5,7 @@
 window.config = {
     BACKEND_URL: "http://ec2-54-236-20-16.compute-1.amazonaws.com:3333"
 }
+
+// window.config = {
+//     BACKEND_URL: "http://localhost:3333"
+// }

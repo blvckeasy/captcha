@@ -16,6 +16,7 @@ async function errorHandler (err, req, res, next) {
 
   return res.send({
     ok: false,
+    error: "InternalServerError",
     errorName: "InternalServerError",
     status: 500,
   })
